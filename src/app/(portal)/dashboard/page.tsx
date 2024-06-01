@@ -1,7 +1,7 @@
 import { getPosts } from '@/services/posts';
 
 export default async function Dashboard() {
-  const posts = await getPosts();
+  const _posts = await getPosts();
 
   return (
     <>

@@ -4,12 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { sleep } from '@/lib/utils';
 
-export async function signIn(formData: FormData) {
-  const data = {
-    email: formData.get('email'),
-    password: formData.get('password'),
-  };
-
+export async function signIn() {
   await sleep(1000);
   redirect('/dashboard');
 }
