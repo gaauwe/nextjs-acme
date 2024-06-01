@@ -111,11 +111,9 @@ export function AlbumArtworkSkeleton({ className, aspectRatio = 'portrait' }: Pa
         <h3 className="leading-none">
           <Skeleton className="w-[200px] max-w-full" />
         </h3>
-        <p>
-          <Skeleton className="text-xs w-[160px] max-w-full" />
-          <Skeleton className="text-xs w-[180px] max-w-full" />
-          <Skeleton className="text-xs w-[130px] max-w-full" />
-        </p>
+        <Skeleton className="text-xs w-[160px] max-w-full" />
+        <Skeleton className="text-xs w-[180px] max-w-full" />
+        <Skeleton className="text-xs w-[130px] max-w-full" />
       </div>
     </div>
   );
