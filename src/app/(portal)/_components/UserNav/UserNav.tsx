@@ -19,9 +19,11 @@ interface UserNav {
     email: string;
     image?: string;
   };
+  alignOffset?: number;
+  align?: 'start' | 'end';
 }
 
-export function UserNav({ user }: UserNav) {
+export function UserNav({ user, ...props }: UserNav) {
   const name = user.email
     .split('@')[0]
     .split('.')
@@ -29,12 +31,15 @@ export function UserNav({ user }: UserNav) {
     .join(' ');
 
   return (
-    <div className="flex gap-x-3 px-4 py-5">
+    <div className="flex gap-x-3 lg:px-4 lg:py-5">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Button
+            variant="outline"
+            className="relative size-10 lg:h-8 lg:w-8 rounded-full border max-lg:border-[rgb(39,39,42)] max-lg:hover:bg-[rgb(39,39,42)] lg:border-none max-lg:bg-[rgba(39,39,42,0.4)]"
+          >
             <Avatar
-              className="h-8 w-8"
+              className="size-10 lg:h-8 lg:w-8"
               src={user.image}
               width={32}
               height={32}
@@ -45,7 +50,7 @@ export function UserNav({ user }: UserNav) {
             />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent arrowPadding={10} alignOffset={-7} sideOffset={10} className="w-56" align="start" forceMount>
+        <DropdownMenuContent alignOffset={0} sideOffset={14} className="w-56" align="start" forceMount {...props}>
           <DropdownMenuGroup>
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
@@ -56,7 +61,7 @@ export function UserNav({ user }: UserNav) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="flex flex-col space-y-1">
+      <div className="flex-col space-y-1 hidden lg:flex">
         <p className="text-sm font-medium leading-none text-background">{name}</p>
         <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
       </div>

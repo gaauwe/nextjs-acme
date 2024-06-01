@@ -4,11 +4,13 @@ import SidebarItem from '@/app/(portal)/_components/SidebarItem/SidebarItem';
 import { UserNav } from '@/app/(portal)/_components/UserNav/UserNav';
 import { cn } from '@/lib/utils';
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  onClick?: () => void;
+}
 
-export async function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ className, onClick }: SidebarProps) {
   return (
-    <div id="sidebar" className={cn('bg-sidebar', className)}>
+    <div id="sidebar" className={cn('bg-sidebar h-full', className)}>
       <div className="space-y-4 py-4 flex-1">
         <div className="px-3 py-2">
           {MENU_ITEMS.map((item) => (
@@ -19,7 +21,7 @@ export async function Sidebar({ className }: SidebarProps) {
                   const Icon = subItem.icon;
 
                   return (
-                    <SidebarItem key={subItem.title} url={subItem.url}>
+                    <SidebarItem key={subItem.title} url={subItem.url} onClick={onClick}>
                       <Icon className="w-4 h-4 mr-3" />
                       {subItem.title}
                     </SidebarItem>
@@ -30,7 +32,9 @@ export async function Sidebar({ className }: SidebarProps) {
           ))}
         </div>
       </div>
-      <UserNav user={{ email: 'john.doe@acme.com' }} />
+      <div className="hidden lg:block">
+        <UserNav user={{ email: 'john.doe@acme.com' }} />
+      </div>
     </div>
   );
 }

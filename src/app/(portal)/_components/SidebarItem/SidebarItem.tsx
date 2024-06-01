@@ -8,15 +8,17 @@ import { cn } from '@/lib/utils';
 
 interface SidebarItemProps {
   url: string;
+  onClick?: () => void;
   children: React.ReactNode;
 }
 
-export default function SidebarItem({ url, children }: SidebarItemProps) {
+export default function SidebarItem({ url, onClick, children }: SidebarItemProps) {
   const path = usePathname();
   return (
     <Button
       as={Link}
       href={url}
+      onClick={onClick}
       variant="ghost"
       className={cn('w-full justify-start text-sidebar-foreground/70', {
         'bg-accent text-accent-foreground': path.includes(url),
