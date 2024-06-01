@@ -1,4 +1,4 @@
-import { LayoutGrid, Map, PlayCircle, Radio, Users } from 'lucide-react';
+import { LayoutGrid, ListChecks, PackageSearch, PlayCircle, Radio } from 'lucide-react';
 
 import SidebarItem from '@/app/(portal)/_components/SidebarItem/SidebarItem';
 import { UserNav } from '@/app/(portal)/_components/UserNav/UserNav';
@@ -51,8 +51,8 @@ const MENU_ITEMS = [
   {
     title: 'Organization',
     items: [
-      { title: 'Members', icon: Users, url: '/members' },
-      { title: 'Locations', icon: Map, url: '/locations' },
+      { title: 'Products', icon: PackageSearch, url: '/members' },
+      { title: 'Tasks', icon: ListChecks, url: '/tasks' },
     ],
   },
 ];

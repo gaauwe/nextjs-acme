@@ -13,7 +13,7 @@ export default function MobileHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-sidebar px-4 py-5 lg:hidden lg:h-[60px] lg:px-6">
+    <header className="flex h-14 items-center gap-4 bg-sidebar px-4 py-5 pb-3 lg:hidden lg:h-[60px] lg:px-6">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button
