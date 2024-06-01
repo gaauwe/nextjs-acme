@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -51,6 +52,13 @@ export function UserNav({ user, ...props }: UserNav) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent alignOffset={0} sideOffset={14} className="w-56" align="start" forceMount {...props}>
+          <DropdownMenuLabel className="font-normal lg:hidden">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">John Doe</p>
+              <p className="text-xs leading-none text-muted-foreground">john.doe@acme.com</p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className="lg:hidden" />
           <DropdownMenuGroup>
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>

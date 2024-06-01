@@ -16,9 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, 'bg-sidebar h-screen flex flex-col')}>{children}</body>
+      <body className={cn(inter.className, 'bg-sidebar h-screen flex flex-col')}>
+        {children}
+        <SpeedInsights />
+      </body>
       <Toaster richColors />
-      <SpeedInsights />
     </html>
   );
 }

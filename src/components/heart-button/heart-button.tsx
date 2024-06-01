@@ -8,7 +8,7 @@ import './heart-button.css';
 import { addLikedSong, deleteLikedSong } from '@/actions/playlist';
 
 interface HeartButtonProps {
-  id: string;
+  id: number;
   isLiked: boolean;
 }
 

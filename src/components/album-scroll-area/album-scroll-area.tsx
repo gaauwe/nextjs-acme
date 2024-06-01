@@ -20,12 +20,12 @@ export default async function AlbumScrollArea({ fetcher, ...props }: AlbumScroll
   );
 }
 
-async function Albums({ fetcher, ...props }: AlbumScrollAreaProps) {
+export async function Albums({ fetcher, ...props }: AlbumScrollAreaProps) {
   const listenNowAlbums = await fetcher();
 
   return listenNowAlbums.map((album) => <AlbumArtwork key={album.id} album={album} {...props} />);
 }
 
-function LoadingSkeleton(props: Partial<AlbumArtworkProps>) {
-  return Array.from({ length: 10 }).map((_, index) => <AlbumArtworkSkeleton key={index} {...props} />);
+export function LoadingSkeleton({ length, ...props }: Partial<AlbumArtworkProps> & { length?: number }) {
+  return Array.from({ length: length ?? 10 }).map((_, index) => <AlbumArtworkSkeleton key={index} {...props} />);
 }
