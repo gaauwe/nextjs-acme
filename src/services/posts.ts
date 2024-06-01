@@ -1,6 +1,10 @@
+import { cookies } from 'next/headers';
+
 import { sleep } from '@/lib/utils';
 
 export async function getListenNow() {
+  cookies().get('email');
+
   await sleep(1000);
   const posts = await fetch('https://jsonplaceholder.typicode.com/posts', { cache: 'force-cache' }).then((res) => res.json());
 
