@@ -20,6 +20,7 @@ interface UserNav {
     email: string;
     image?: string;
   };
+  sideOffset?: number;
   alignOffset?: number;
   align?: 'start' | 'end';
 }

@@ -31,7 +31,7 @@ export default function MobileHeader() {
       <a className="flex items-center gap-2 font-semibold text-white mx-auto" href="/">
         Acme Inc
       </a>
-      <UserNav user={{ email: 'john.doe@acme.com' }} alignOffset={-10} align="end" />
+      <UserNav user={{ email: 'john.doe@acme.com' }} sideOffset={8} alignOffset={-12} align="end" />
     </header>
   );
 }
