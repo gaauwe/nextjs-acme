@@ -22,12 +22,12 @@ import { columns } from './columns';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData> {
   // columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({ data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData>({ data }: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -35,6 +35,7 @@ export function DataTable<TData, TValue>({ data }: DataTableProps<TData, TValue>
 
   const table = useReactTable({
     data,
+    // @ts-expect-error - TS doesn't like the `columns` prop being passed to `useReactTable`
     columns,
     state: {
       sorting,
