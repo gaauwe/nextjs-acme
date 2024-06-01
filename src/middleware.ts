@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
 
   // Redirect to dashboard if user is signed in
   if (request.nextUrl.pathname.startsWith('/sign-in') && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/listen-now', request.url));
   }
 }
 

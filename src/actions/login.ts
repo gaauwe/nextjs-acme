@@ -10,7 +10,7 @@ export async function signIn(formData: FormData) {
   cookies().set('email', email);
 
   await sleep(1000);
-  redirect('/dashboard');
+  redirect('/listen-now');
 }
 
 export async function signOut() {

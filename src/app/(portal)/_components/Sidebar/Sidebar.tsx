@@ -1,4 +1,4 @@
-import { LayoutGrid, Library, ListMusic, Mic2, Music2, PlayCircle, User } from 'lucide-react';
+import { LayoutGrid, Library, ListMusic, Mic2, Music2, PlayCircle, Radio, User } from 'lucide-react';
 
 import SidebarItem from '@/app/(portal)/_components/SidebarItem/SidebarItem';
 import { UserNav } from '@/app/(portal)/_components/UserNav/UserNav';
@@ -39,8 +39,9 @@ const MENU_ITEMS = [
   {
     title: 'Discover',
     items: [
-      { title: 'Dashboard', icon: PlayCircle, url: '/dashboard' },
+      { title: 'Listen Now', icon: PlayCircle, url: '/listen-now' },
       { title: 'Browse', icon: LayoutGrid, url: '/browse' },
+      { title: 'Radio', icon: Radio, url: '/radio' },
     ],
   },
   {

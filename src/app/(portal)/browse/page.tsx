@@ -1,7 +1,7 @@
-import { getPosts } from '@/services/posts';
+import { getListenNow } from '@/services/posts';
 
 export default async function Dashboard() {
-  const _posts = await getPosts();
+  const _posts = await getListenNow();
 
   return (
     <>
