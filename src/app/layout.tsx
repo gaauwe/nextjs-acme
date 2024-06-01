@@ -1,3 +1,4 @@
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
@@ -17,6 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(inter.className, 'bg-sidebar h-screen flex flex-col')}>{children}</body>
       <Toaster richColors />
+      <SpeedInsights />
     </html>
   );
 }
