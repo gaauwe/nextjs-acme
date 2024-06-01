@@ -30,7 +30,7 @@ export async function Sidebar({ className }: SidebarProps) {
           ))}
         </div>
       </div>
-      <UserNav user={{ name: 'John Doe', email: 'john.doe@acme.com', image: '' }} />
+      <UserNav user={{ email: 'john.doe@acme.com' }} />
     </div>
   );
 }

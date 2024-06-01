@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 interface AvatarProps {
   className?: string;
-  src: string;
+  src?: string;
   width: number;
   height: number;
   fallback: string;
@@ -18,8 +18,8 @@ interface AvatarProps {
 const Avatar = React.forwardRef<React.ElementRef<typeof AvatarPrimitive.Root>, AvatarProps>(
   ({ className, src, width, height, fallback }, ref) => (
     <AvatarPrimitive.Root ref={ref} className={cn('relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full', className)}>
-      {src.length > 0 && <Image src={src} alt="profile picture" className="object-cover" width={width} height={height} />}
-      {src.length <= 0 && <AvatarFallback>{fallback}</AvatarFallback>}
+      {src && <Image src={src} alt="profile picture" className="object-cover" width={width} height={height} />}
+      {!src && <AvatarFallback>{fallback}</AvatarFallback>}
     </AvatarPrimitive.Root>
   ),
 );

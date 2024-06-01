@@ -19,7 +19,7 @@ export default function SignIn() {
           <form className="grid gap-4" action={signIn}>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required defaultValue="john.doe@acme.com" />
+              <Input id="email" name="email" type="email" placeholder="m@example.com" required defaultValue="john.doe@acme.com" />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
@@ -28,7 +28,7 @@ export default function SignIn() {
                   Forgot your password?
                 </Link>
               </div>
-              <Input id="password" type="password" required defaultValue="password" />
+              <Input id="password" name="password" type="password" required defaultValue="password" />
             </div>
             <SubmitButton type="submit" className="w-full">
               Login

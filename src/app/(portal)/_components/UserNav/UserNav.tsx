@@ -12,15 +12,22 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import '@/lib/supressLogs';
+
 interface UserNav {
   user: {
-    name: string;
     email: string;
-    image: string;
+    image?: string;
   };
 }
 
 export function UserNav({ user }: UserNav) {
+  const name = user.email
+    .split('@')[0]
+    .split('.')
+    .map((item) => item[0].toUpperCase() + item.slice(1))
+    .join(' ');
+
   return (
     <div className="flex gap-x-3 px-4 py-5">
       <DropdownMenu>
@@ -31,7 +38,7 @@ export function UserNav({ user }: UserNav) {
               src={user.image}
               width={32}
               height={32}
-              fallback={user.name
+              fallback={name
                 .split(' ')
                 .map((item) => item[0].toUpperCase())
                 .join('')}
@@ -50,7 +57,7 @@ export function UserNav({ user }: UserNav) {
         </DropdownMenuContent>
       </DropdownMenu>
       <div className="flex flex-col space-y-1">
-        <p className="text-sm font-medium leading-none text-background">{user.name}</p>
+        <p className="text-sm font-medium leading-none text-background">{name}</p>
         <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
       </div>
     </div>
