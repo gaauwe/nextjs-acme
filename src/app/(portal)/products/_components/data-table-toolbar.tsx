@@ -1,45 +1,49 @@
 'use client';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { Table } from '@tanstack/react-table';
+import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { priorities, statuses } from '@/services/tasks/data';
 
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
-import { DataTableViewOptions } from './data-table-view-options';
 
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
+interface DataTableToolbarProps {
+  filters?: { label: string; key: string; options: { label: string; value: string }[] }[];
+  search?: string | null;
+  placeholder?: string;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+export function DataTableToolbar({ filters, search, placeholder }: DataTableToolbarProps) {
+  const searchParams = useSearchParams();
+  const isFiltered = false;
+
+  const updateSearchParams = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set(key, value);
+    window.history.pushState(null, '', `?${params.toString()}`);
+  };
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center gap-2 flex-wrap">
         <Input
-          placeholder="Filter tasks..."
-          value={table.getColumn('title')?.getFilterValue() as string}
-          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
+          placeholder={placeholder ?? 'Filter entries...'}
+          value={search ?? ''}
+          onChange={(e) => updateSearchParams('search', e.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         <div className="gap-x-2 flex">
-          {table.getColumn('status') && <DataTableFacetedFilter column={table.getColumn('status')} title="Status" options={statuses} />}
-          {table.getColumn('priority') && (
-            <DataTableFacetedFilter column={table.getColumn('priority')} title="Priority" options={priorities} />
-          )}
+          {filters?.map((filter) => <DataTableFacetedFilter key={filter.key} title={filter.label} options={filter.options} />)}
         </div>
         {isFiltered && (
-          <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
+          <Button variant="ghost" className="h-8 px-2 lg:px-3">
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      {/* <DataTableViewOptions table={table} /> */}
     </div>
   );
 }

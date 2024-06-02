@@ -1,5 +1,5 @@
-const Skeleton = ({ className }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div aria-live="polite" aria-busy="true" className={className}>
+const Skeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div aria-live="polite" aria-busy="true" className={className} {...props}>
     <span className="inline-flex w-full animate-pulse select-none rounded-md bg-gray-300 leading-none">‌</span>
     <br />
   </div>

@@ -1,14 +1,19 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useDeferredValue, useEffect, useRef, useState } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { LoaderCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
+import { Badge, BadgeProps } from '@/components/ui/badge';
+import { SVGSkeleton, Skeleton } from '@/components/ui/skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-interface TData<T> {
+import { DataTablePagination } from './data-table-pagination';
+import { DataTableToolbar } from './data-table-toolbar';
+
+export interface TData<T> {
   data: T;
   meta: {
     page: {
@@ -20,19 +25,31 @@ interface TData<T> {
     filters: {
       label: string;
       key: string;
-      options: { label: string; value: string }[];
+      options: { label: string; value: string; badgeColor?: string }[];
     }[];
   };
 }
 
-export interface DataTableProps<T> {
+export interface DataTableProps {
   path: string;
+  filterPlaceholder?: string;
+  columns: {
+    header: string;
+    cell: string;
+    width?: string;
+    type?: 'badge' | 'image' | 'date' | 'currency' | 'number';
+    colSpan?: number;
+  }[];
 }
 
-export function DataTable<TData>({ path }: DataTableProps<TData>) {
+export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) {
   const searchParams = useSearchParams();
-  const { data } = useSuspenseQuery({
-    queryKey: ['wait', searchParams.toString()],
+  const deferedSearchParams = useDeferredValue(searchParams);
+  const loadingTimeout = useRef<NodeJS.Timeout>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { data } = useSuspenseQuery<TData<any>>({
+    queryKey: [path, deferedSearchParams.toString()],
     queryFn: async () => {
       const data = await fetch(`http://localhost:4000/api${path}?${searchParams.toString()}`, { cache: 'force-cache' }).then((res) =>
         res.json(),
@@ -41,40 +58,93 @@ export function DataTable<TData>({ path }: DataTableProps<TData>) {
     },
   });
 
-  const currentPage = data.meta.page.currentPage;
+  useEffect(() => {
+    if (searchParams.toString() !== deferedSearchParams.toString()) {
+      loadingTimeout.current = setTimeout(() => setIsLoading(true), 100);
+    }
 
-  const updateSearchParams = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set(key, value);
-    window.history.pushState(null, '', `?${params.toString()}`);
-  };
+    if (loadingTimeout.current && searchParams.toString() === deferedSearchParams.toString()) {
+      clearTimeout(loadingTimeout.current);
+      setIsLoading(false);
+    }
+  }, [searchParams, deferedSearchParams]);
+
+  console.log(data);
 
   return (
     <div className="space-y-4">
-      <Button onClick={() => updateSearchParams('page', currentPage + 1)}>Refetch</Button>
-      {/* <DataTableToolbar table={table} /> */}
-      {/* <div className="rounded-md border">
+      <DataTableToolbar filters={data.meta.filters} search={searchParams.get('search')} placeholder={filterPlaceholder} />
+      <div className="rounded-md border bg-white relative">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
+            <TableRow>
+              {columns.map((header, i) => {
+                return <TableHead key={i}>{header.header}</TableHead>;
+              })}
+            </TableRow>
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                  ))}
+            {data.data.length ? (
+              data.data.map((row, i) => (
+                <TableRow key={i} data-state="nselected" className="cursor-pointer">
+                  {columns.map((column, i) => {
+                    const value = row[column.cell];
+
+                    if (column.type === 'date') {
+                      return (
+                        <TableCell key={i} width={column.width}>
+                          {new Date(value).toLocaleDateString('nl-NL', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })}
+                        </TableCell>
+                      );
+                    }
+
+                    if (column.type === 'currency') {
+                      return (
+                        <TableCell key={i} width={column.width}>
+                          {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(value)}
+                        </TableCell>
+                      );
+                    }
+
+                    if (column.type === 'number') {
+                      return (
+                        <TableCell key={i} width={column.width}>
+                          {new Intl.NumberFormat('nl-NL').format(value)}
+                        </TableCell>
+                      );
+                    }
+
+                    if (column.type === 'image') {
+                      return (
+                        <TableCell key={i} width={column.width}>
+                          <img src={value} className="h-16 w-16 rounded-md shadow-md" />
+                        </TableCell>
+                      );
+                    }
+
+                    if (column.type === 'badge') {
+                      const option = data.meta.filters
+                        .find((filter) => filter.key === column.cell)
+                        ?.options.find((option) => option.value === value);
+                      const badgeVariant = option?.badgeColor as BadgeProps['variant'];
+
+                      return (
+                        <TableCell key={i} width={column.width}>
+                          <Badge variant={badgeVariant}>{option?.label}</Badge>
+                        </TableCell>
+                      );
+                    }
+
+                    return (
+                      <TableCell key={i} width={column.width}>
+                        {value}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))
             ) : (
@@ -86,25 +156,65 @@ export function DataTable<TData>({ path }: DataTableProps<TData>) {
             )}
           </TableBody>
         </Table>
+        {isLoading && (
+          <div className="absolute z-10 inset-0 flex justify-center items-center bg-background/80 rounded-md">
+            <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        )}
       </div>
-      <DataTablePagination table={table} /> */}
+      <DataTablePagination {...data.meta.page} />
     </div>
   );
 }
 
-export default function DataTableWithSuspense<T>({ path }: DataTableProps<T>) {
+function DataTableSkeleton(props: DataTableProps) {
   const searchParams = useSearchParams();
 
   return (
-    <Suspense
-      key={searchParams.toString()}
-      fallback={
-        <div className="h-full w-full flex flex-1 items-center justify-center">
-          <LoaderCircle className="h-8 w-8 animate-spin" />
-        </div>
-      }
-    >
-      <DataTable path={path} />
+    <div className="space-y-4">
+      <DataTableToolbar filters={[]} search={searchParams.get('search')} placeholder={props.filterPlaceholder} />
+      <div className="rounded-md border bg-white relative">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {props.columns.map((header, i) => {
+                return <TableHead key={i}>{header.header.length > 0 ? <Skeleton className="h-4 w-24" /> : null}</TableHead>;
+              })}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 10 }, (row, i) => (
+              <TableRow key={i} data-state="nselected" className="cursor-pointer">
+                {props.columns.map((column, i) => {
+                  const randomWidth = Math.floor(Math.random() * (200 - 120 + 1)) + 120;
+
+                  if (column.type === 'image') {
+                    return (
+                      <TableCell key={i} width={column.width}>
+                        <SVGSkeleton className="h-16 w-16 rounded-md shadow-md" />
+                      </TableCell>
+                    );
+                  }
+
+                  return (
+                    <TableCell key={i} width={column.width} className="h-[55px]">
+                      <Skeleton className="h-4" style={{ width: randomWidth }} />
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
+}
+
+export default function DataTableWithSuspense(props: DataTableProps) {
+  return (
+    <Suspense key={props.path} fallback={<DataTableSkeleton {...props} />}>
+      <DataTable {...props} />
     </Suspense>
   );
 }

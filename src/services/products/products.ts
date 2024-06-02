@@ -8,7 +8,7 @@ export async function getProducts({ page }: { page: string }) {
   await sleep(1000);
   const currentPage = page ? parseInt(page, 10) : 1;
 
-  const products = Array.from({ length: 100 }, (_item, index) => ({
+  const products = Array.from({ length: 10 }, (_item, index) => ({
     id: index,
     image: `https://picsum.photos/seed/${index}-product/1000/1000`,
     name: faker.commerce.productName(),
