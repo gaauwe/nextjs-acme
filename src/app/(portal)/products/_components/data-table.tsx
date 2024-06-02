@@ -111,7 +111,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
                     if (column.type === 'date') {
                       return (
-                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }} className="text-nowrap">
                           {new Date(value).toLocaleDateString('nl-NL', {
                             year: 'numeric',
                             month: '2-digit',
@@ -123,7 +123,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
                     if (column.type === 'currency') {
                       return (
-                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }} className="text-nowrap">
                           {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(Number(value))}
                         </TableCell>
                       );
@@ -131,7 +131,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
                     if (column.type === 'number') {
                       return (
-                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }} className="text-nowrap">
                           {new Intl.NumberFormat('nl-NL').format(Number(value))}
                         </TableCell>
                       );
