@@ -9,6 +9,7 @@ import { useSearchParams } from 'next/navigation';
 import { Badge, BadgeProps } from '@/components/ui/badge';
 import { SVGSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { getUrl } from '@/lib/utils';
 
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
@@ -51,9 +52,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
   const { data } = useSuspenseQuery<TData<Record<string, string | number>[]>>({
     queryKey: [path, deferedSearchParams.toString()],
     queryFn: async () => {
-      const data = await fetch(`http://localhost:4000/api${path}?${searchParams.toString()}`, { cache: 'force-cache' }).then((res) =>
-        res.json(),
-      );
+      const data = await fetch(getUrl(`/api${path}?${searchParams.toString()}`), { cache: 'force-cache' }).then((res) => res.json());
       return data;
     },
   });

@@ -13,15 +13,12 @@ import { getListenNow, getMadeForYou } from '@/services/posts';
 export default async function ListenNow() {
   return (
     <Tabs defaultValue="music" className="flex flex-1 flex-col space-y-6">
-      <div className="space-between flex items-center">
+      <div className="space-between flex items-center gap-x-2">
         <TabsList>
           <TabsTrigger value="music" className="relative">
             Music
           </TabsTrigger>
           <TabsTrigger value="podcasts">Podcasts</TabsTrigger>
-          <TabsTrigger value="live" disabled>
-            Live
-          </TabsTrigger>
         </TabsList>
         <div className="ml-auto">
           <Button>
