@@ -71,7 +71,12 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar filters={data.meta.filters} search={searchParams.get('search')} placeholder={filterPlaceholder} />
+      <DataTableToolbar
+        filters={data.meta.filters}
+        search={searchParams.get('search')}
+        placeholder={filterPlaceholder}
+        searchParams={searchParams}
+      />
       <div className="rounded-md border bg-white relative">
         <Table>
           <TableHeader>
@@ -167,11 +172,9 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 }
 
 function DataTableSkeleton(props: DataTableProps) {
-  const searchParams = useSearchParams();
-
   return (
     <div className="space-y-4">
-      <DataTableToolbar filters={[]} search={searchParams.get('search')} placeholder={props.filterPlaceholder} />
+      <DataTableToolbar filters={[]} placeholder={props.filterPlaceholder} />
       <div className="rounded-md border bg-white relative">
         <Table>
           <TableHeader>

@@ -1,7 +1,7 @@
 'use client';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { useSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,11 +12,11 @@ interface DataTableToolbarProps {
   filters?: { label: string; key: string; options: { label: string; value: string }[] }[];
   search?: string | null;
   placeholder?: string;
+  searchParams?: ReadonlyURLSearchParams;
 }
 
-export function DataTableToolbar({ filters, search, placeholder }: DataTableToolbarProps) {
-  const searchParams = useSearchParams();
-  const isFiltered = Object.keys(searchParams).some((key) => key.startsWith('filter') || key === 'search');
+export function DataTableToolbar({ filters, search, placeholder, searchParams }: DataTableToolbarProps) {
+  const isFiltered = Object.keys(searchParams ?? {}).some((key) => key.startsWith('filter') || key === 'search');
 
   const updateSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);

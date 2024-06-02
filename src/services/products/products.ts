@@ -1,11 +1,14 @@
 import { faker } from '@faker-js/faker';
+import { cookies } from 'next/headers';
 
 import { sleep } from '@/lib/utils';
 
 import { categories, statuses } from './data';
 
 export async function getProducts({ page }: { page: string | null }) {
+  cookies().get('email');
   await sleep(1000);
+
   const currentPage = page ? parseInt(page, 10) : 1;
 
   const products = Array.from({ length: 10 }, (_item, index) => ({
