@@ -1,7 +1,6 @@
 import { Separator } from '@/components/ui/separator';
-import { getTasks } from '@/services/tasks/tasks';
 
-import Table from './_components/table';
+import DataTableWithSuspense from './_components/data-table';
 
 export default async function Browse({ searchParams }: { searchParams: Record<string, string> }) {
   return (
@@ -13,7 +12,7 @@ export default async function Browse({ searchParams }: { searchParams: Record<st
         </div>
       </div>
       <Separator className="my-4" />
-      <Table key={new URLSearchParams(searchParams).toString()} fetcher={getTasks} />
+      <DataTableWithSuspense path="/products" />
     </>
   );
 }

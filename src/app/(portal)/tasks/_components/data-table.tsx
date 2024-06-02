@@ -1,65 +1,59 @@
 'use client';
 
-import * as React from 'react';
+import { Suspense } from 'react';
 
-import {
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { LoaderCircle } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
 
-import { columns } from './columns';
-import { DataTablePagination } from './data-table-pagination';
-import { DataTableToolbar } from './data-table-toolbar';
-
-interface DataTableProps<TData> {
-  // columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface TData<T> {
+  data: T;
+  meta: {
+    page: {
+      currentPage: number;
+      perPage: number;
+      lastPage: number;
+      total: number;
+    };
+    filters: {
+      label: string;
+      key: string;
+      options: { label: string; value: string }[];
+    }[];
+  };
 }
 
-export function DataTable<TData>({ data }: DataTableProps<TData>) {
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+export interface DataTableProps<T> {
+  path: string;
+}
 
-  const table = useReactTable({
-    data,
-    // @ts-expect-error - TS doesn't like the `columns` prop being passed to `useReactTable`
-    columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
+export function DataTable<TData>({ path }: DataTableProps<TData>) {
+  const searchParams = useSearchParams();
+  const { data } = useSuspenseQuery({
+    queryKey: ['wait', searchParams.toString()],
+    queryFn: async () => {
+      const data = await fetch(`http://localhost:4000/api${path}?${searchParams.toString()}`, { cache: 'force-cache' }).then((res) =>
+        res.json(),
+      );
+      return data;
     },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  const currentPage = data.meta.page.currentPage;
+
+  const updateSearchParams = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set(key, value);
+    window.history.pushState(null, '', `?${params.toString()}`);
+  };
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <Button onClick={() => updateSearchParams('page', currentPage + 1)}>Refetch</Button>
+      {/* <DataTableToolbar table={table} /> */}
+      {/* <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -93,7 +87,24 @@ export function DataTable<TData>({ data }: DataTableProps<TData>) {
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} /> */}
     </div>
+  );
+}
+
+export default function DataTableWithSuspense<T>({ path }: DataTableProps<T>) {
+  const searchParams = useSearchParams();
+
+  return (
+    <Suspense
+      key={searchParams.toString()}
+      fallback={
+        <div className="h-full w-full flex flex-1 items-center justify-center">
+          <LoaderCircle className="h-8 w-8 animate-spin" />
+        </div>
+      }
+    >
+      <DataTable path={path} />
+    </Suspense>
   );
 }

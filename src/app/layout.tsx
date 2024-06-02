@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 
 import '@/lib/supressLogs';
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className, 'bg-sidebar h-screen flex flex-col')}>
-        {children}
+        <Providers>{children}</Providers>
         <SpeedInsights />
       </body>
       <Toaster richColors />
