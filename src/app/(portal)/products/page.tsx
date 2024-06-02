@@ -15,7 +15,7 @@ export default async function Products() {
       <DataTableWithSuspense
         path="/products"
         columns={[
-          { header: '', cell: 'image', type: 'image', width: '100px' },
+          { header: '', viewHeader: 'Image', cell: 'image', type: 'image', width: '100px' },
           { header: 'Name', cell: 'name' },
           { header: 'Status', cell: 'status', type: 'badge' },
           { header: 'Price', cell: 'price', type: 'currency' },

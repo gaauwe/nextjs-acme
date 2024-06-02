@@ -6,16 +6,19 @@ import { ReadonlyURLSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
+import { DataTableProps } from './data-table';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
+import { DataTableViewOptions } from './data-table-view-options';
 
 interface DataTableToolbarProps {
   filters?: { label: string; key: string; options: { label: string; value: string }[] }[];
   search?: string | null;
   placeholder?: string;
   searchParams?: ReadonlyURLSearchParams;
+  columns: DataTableProps['columns'];
 }
 
-export function DataTableToolbar({ filters, search, placeholder, searchParams }: DataTableToolbarProps) {
+export function DataTableToolbar({ filters, search, placeholder, searchParams, columns }: DataTableToolbarProps) {
   const isFiltered = [...(searchParams?.keys() ?? [])].some((key) => key.startsWith('filter') || key === 'search');
 
   const updateSearchParams = (key: string, value: string) => {
@@ -55,7 +58,7 @@ export function DataTableToolbar({ filters, search, placeholder, searchParams }:
           </Button>
         )}
       </div>
-      {/* <DataTableViewOptions table={table} /> */}
+      <DataTableViewOptions columns={columns} />
     </div>
   );
 }

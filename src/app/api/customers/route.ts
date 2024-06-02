@@ -15,5 +15,13 @@ export async function GET(request: NextRequest) {
     }
   });
 
-  return Response.json(await getCustomers({ page, pageSize, filters, search }));
+  const sortKey = [...searchParams.entries()].find(([key]) => key.startsWith('sort'));
+  const match = sortKey?.[0].match(/\[(.*?)\]/);
+  let sort: undefined | Record<string, 'asc' | 'desc'> = undefined;
+  if (match && sortKey) {
+    const value = match[1];
+    sort = { [value]: searchParams.get(sortKey[0]) as 'asc' | 'desc' };
+  }
+
+  return Response.json(await getCustomers({ page, pageSize, filters, search, sort }));
 }

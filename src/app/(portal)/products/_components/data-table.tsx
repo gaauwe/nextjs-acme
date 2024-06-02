@@ -11,6 +11,7 @@ import { SVGSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getUrl } from '@/lib/utils';
 
+import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
@@ -36,10 +37,11 @@ export interface DataTableProps {
   filterPlaceholder?: string;
   columns: {
     header: string;
+    viewHeader?: string;
     cell: string;
     width?: string;
     type?: 'badge' | 'image' | 'date' | 'currency' | 'number';
-    colSpan?: number;
+    canSort?: boolean;
   }[];
 }
 
@@ -47,10 +49,12 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
   const searchParams = useSearchParams();
   const deferedSearchParams = useDeferredValue(searchParams);
   const loadingTimeout = useRef<NodeJS.Timeout>();
+  const activeColumns = searchParams.get('columns')?.split(',') ?? [];
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { data } = useSuspenseQuery<TData<Record<string, string | number>[]>>({
-    queryKey: [path, deferedSearchParams.toString()],
+    queryKey: [path, deferedSearchParams.toString().replace(/&?columns=[^&]*/g, '')],
     queryFn: async () => {
       const data = await fetch(getUrl(`/api${path}?${searchParams.toString()}`), { cache: 'force-cache' }).then((res) => res.json());
       return data;
@@ -75,15 +79,20 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
         search={searchParams.get('search')}
         placeholder={filterPlaceholder}
         searchParams={searchParams}
+        columns={columns}
       />
       <div className="rounded-md border bg-white relative">
         <Table>
           <TableHeader>
             <TableRow>
               {columns.map((header, i) => {
+                if (activeColumns.length > 0 && !activeColumns.includes(header.viewHeader ?? header.header)) {
+                  return null;
+                }
+
                 return (
                   <TableHead key={i} className="text-nowrap">
-                    {header.header}
+                    <DataTableColumnHeader column={header} />
                   </TableHead>
                 );
               })}
@@ -94,11 +103,15 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
               data.data.map((row) => (
                 <TableRow key={row.id} data-state="nselected" className="cursor-pointer">
                   {columns.map((column, i) => {
+                    if (activeColumns.length > 0 && !activeColumns.includes(column.viewHeader ?? column.header)) {
+                      return null;
+                    }
+
                     const value = row[column.cell];
 
                     if (column.type === 'date') {
                       return (
-                        <TableCell key={i} width={column.width}>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
                           {new Date(value).toLocaleDateString('nl-NL', {
                             year: 'numeric',
                             month: '2-digit',
@@ -110,7 +123,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
                     if (column.type === 'currency') {
                       return (
-                        <TableCell key={i} width={column.width}>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
                           {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(Number(value))}
                         </TableCell>
                       );
@@ -118,7 +131,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
                     if (column.type === 'number') {
                       return (
-                        <TableCell key={i} width={column.width}>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
                           {new Intl.NumberFormat('nl-NL').format(Number(value))}
                         </TableCell>
                       );
@@ -126,7 +139,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
                     if (column.type === 'image' && typeof value === 'string') {
                       return (
-                        <TableCell key={i} width={column.width}>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={value} alt="" className="h-16 w-16 rounded-md shadow-md" />
                         </TableCell>
@@ -140,14 +153,16 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
                       const badgeVariant = option?.badgeColor as BadgeProps['variant'];
 
                       return (
-                        <TableCell key={i} width={column.width}>
-                          <Badge variant={badgeVariant}>{option?.label}</Badge>
+                        <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
+                          <Badge variant={badgeVariant} className="text-nowrap">
+                            {option?.label}
+                          </Badge>
                         </TableCell>
                       );
                     }
 
                     return (
-                      <TableCell key={i} width={column.width}>
+                      <TableCell key={i} style={{ minWidth: column.width, maxWidth: column.width }}>
                         {value}
                       </TableCell>
                     );
@@ -177,7 +192,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 function DataTableSkeleton(props: DataTableProps) {
   return (
     <div className="space-y-4">
-      <DataTableToolbar filters={[]} placeholder={props.filterPlaceholder} />
+      <DataTableToolbar filters={[]} placeholder={props.filterPlaceholder} columns={props.columns} />
       <div className="rounded-md border bg-white relative">
         <Table>
           <TableHeader>
