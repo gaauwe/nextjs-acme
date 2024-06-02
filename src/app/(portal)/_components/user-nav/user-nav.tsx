@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import '@/lib/supressLogs';
+// import '@/lib/supressLogs';
 
 interface UserNav {
   user: {

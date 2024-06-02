@@ -29,7 +29,7 @@ export default function MobileNav() {
         </SheetTrigger>
         <SheetContent side="left" className="bg-sidebar border-0">
           <nav className="grid gap-2 text-lg font-medium">
-            <Link href="#" className="flex items-center gap-2 text-lg font-semibold mb-2">
+            <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold mb-2" onClick={() => setOpen(false)}>
               <Package2 className="h-6 w-6 text-primary" />
               <span className="text-primary px-1">Acme Inc</span>
             </Link>
@@ -38,6 +38,7 @@ export default function MobileNav() {
               className={cn('mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  text-white/60 hover:text-white', {
                 'bg-muted text-foreground hover:text-foreground': path.startsWith('/dashboard'),
               })}
+              onClick={() => setOpen(false)}
             >
               <Home className="h-5 w-5" />
               Dashboard
@@ -47,6 +48,7 @@ export default function MobileNav() {
               className={cn('mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  text-white/60 hover:text-white', {
                 'bg-muted text-foreground hover:text-foreground': path.startsWith('/products'),
               })}
+              onClick={() => setOpen(false)}
             >
               <Package className="h-5 w-5" />
               Products
@@ -56,6 +58,7 @@ export default function MobileNav() {
               className={cn('mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  text-white/60 hover:text-white', {
                 'bg-muted text-foreground hover:text-foreground': path.startsWith('/customers'),
               })}
+              onClick={() => setOpen(false)}
             >
               <Users className="h-5 w-5" />
               Customers
@@ -65,6 +68,7 @@ export default function MobileNav() {
               className={cn('mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  text-white/60 hover:text-white', {
                 'bg-muted text-foreground hover:text-foreground': path.startsWith('/settings'),
               })}
+              onClick={() => setOpen(false)}
             >
               <Settings className="h-5 w-5" />
               Settings

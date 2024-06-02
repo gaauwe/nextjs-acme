@@ -16,11 +16,21 @@ interface DataTableToolbarProps {
 }
 
 export function DataTableToolbar({ filters, search, placeholder, searchParams }: DataTableToolbarProps) {
-  const isFiltered = Object.keys(searchParams ?? {}).some((key) => key.startsWith('filter') || key === 'search');
+  const isFiltered = [...(searchParams?.keys() ?? [])].some((key) => key.startsWith('filter') || key === 'search');
 
   const updateSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
     params.set(key, value);
+    window.history.pushState(null, '', `?${params.toString()}`);
+  };
+
+  const clearFilters = () => {
+    const params = new URLSearchParams(searchParams);
+    [...params.keys()].forEach((key) => {
+      if (key.startsWith('filter') || key === 'search') {
+        params.delete(key);
+      }
+    });
     window.history.pushState(null, '', `?${params.toString()}`);
   };
 
@@ -34,10 +44,12 @@ export function DataTableToolbar({ filters, search, placeholder, searchParams }:
           className="h-8 w-[150px] lg:w-[250px]"
         />
         <div className="gap-x-2 flex">
-          {filters?.map((filter) => <DataTableFacetedFilter key={filter.key} title={filter.label} options={filter.options} />)}
+          {filters?.map((filter) => (
+            <DataTableFacetedFilter key={filter.key} label={filter.label} filterKey={filter.key} options={filter.options} />
+          ))}
         </div>
         {isFiltered && (
-          <Button variant="ghost" className="h-8 px-2 lg:px-3">
+          <Button variant="ghost" className="h-8 px-2 lg:px-3" onClick={clearFilters}>
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>

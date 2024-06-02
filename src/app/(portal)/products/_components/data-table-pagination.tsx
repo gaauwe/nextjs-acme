@@ -13,6 +13,8 @@ export function DataTablePagination({ currentPage, lastPage, total }: TData<unkn
     const params = new URLSearchParams(searchParams);
     params.set(key, value.toString());
     window.history.pushState(null, '', `?${params.toString()}`);
+
+    document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (

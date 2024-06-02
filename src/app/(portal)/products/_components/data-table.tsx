@@ -59,7 +59,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
   useEffect(() => {
     if (searchParams.toString() !== deferedSearchParams.toString()) {
-      loadingTimeout.current = setTimeout(() => setIsLoading(true), 100);
+      loadingTimeout.current = setTimeout(() => setIsLoading(true), 50);
     }
 
     if (loadingTimeout.current && searchParams.toString() === deferedSearchParams.toString()) {
@@ -81,14 +81,18 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
           <TableHeader>
             <TableRow>
               {columns.map((header, i) => {
-                return <TableHead key={i}>{header.header}</TableHead>;
+                return (
+                  <TableHead key={i} className="text-nowrap">
+                    {header.header}
+                  </TableHead>
+                );
               })}
             </TableRow>
           </TableHeader>
           <TableBody>
             {data.data.length ? (
-              data.data.map((row, i) => (
-                <TableRow key={i} data-state="nselected" className="cursor-pointer">
+              data.data.map((row) => (
+                <TableRow key={row.id} data-state="nselected" className="cursor-pointer">
                   {columns.map((column, i) => {
                     const value = row[column.cell];
 
@@ -104,18 +108,18 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
                       );
                     }
 
-                    if (column.type === 'currency' && typeof value === 'number') {
+                    if (column.type === 'currency') {
                       return (
                         <TableCell key={i} width={column.width}>
-                          {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(value)}
+                          {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(Number(value))}
                         </TableCell>
                       );
                     }
 
-                    if (column.type === 'number' && typeof value === 'number') {
+                    if (column.type === 'number') {
                       return (
                         <TableCell key={i} width={column.width}>
-                          {new Intl.NumberFormat('nl-NL').format(value)}
+                          {new Intl.NumberFormat('nl-NL').format(Number(value))}
                         </TableCell>
                       );
                     }
