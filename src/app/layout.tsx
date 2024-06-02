@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, 'bg-sidebar h-screen flex flex-col')}>
+      <body className={cn(inter.className, 'bg-sidebar h-[100svh] flex flex-col')}>
         <Providers>{children}</Providers>
         <SpeedInsights />
       </body>

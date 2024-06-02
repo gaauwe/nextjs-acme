@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 
 export default function SignIn() {
   return (
-    <div className="w-full lg:grid lg:grid-cols-2  min-h-screen bg-white">
+    <div className="w-full lg:grid lg:grid-cols-2  min-h-[100svh] bg-white">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
