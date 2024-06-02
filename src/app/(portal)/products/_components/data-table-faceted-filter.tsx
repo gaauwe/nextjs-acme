@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { PlusCircledIcon } from '@radix-ui/react-icons';
 import { Column } from '@tanstack/react-table';
-import { useSearchParams } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,15 +21,15 @@ interface DataTableFacetedFilterProps<TData, TValue> {
 }
 
 export function DataTableFacetedFilter<TData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
 
   // GET /comments?filter[post]=1 HTTP/1.1
-  const updateSearchParams = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set(key, value);
-    window.history.pushState(null, '', `?${params.toString()}`);
-  };
+  // const updateSearchParams = (key: string, value: string) => {
+  //   const params = new URLSearchParams(searchParams);
+  //   params.set(key, value);
+  //   window.history.pushState(null, '', `?${params.toString()}`);
+  // };
 
   return (
     <Popover>

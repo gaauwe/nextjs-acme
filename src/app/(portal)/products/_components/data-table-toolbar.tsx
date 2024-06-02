@@ -16,7 +16,7 @@ interface DataTableToolbarProps {
 
 export function DataTableToolbar({ filters, search, placeholder }: DataTableToolbarProps) {
   const searchParams = useSearchParams();
-  const isFiltered = false;
+  const isFiltered = Object.keys(searchParams).some((key) => key.startsWith('filter') || key === 'search');
 
   const updateSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);

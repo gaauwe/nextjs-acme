@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 import { TData } from './data-table';
 
-export function DataTablePagination({ currentPage, lastPage, perPage, total }: TData<unknown>['meta']['page']) {
+export function DataTablePagination({ currentPage, lastPage, total }: TData<unknown>['meta']['page']) {
   const searchParams = useSearchParams();
 
   const updateSearchParams = (key: string, value: string | number) => {

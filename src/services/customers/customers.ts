@@ -5,7 +5,7 @@ import { sleep } from '@/lib/utils';
 
 import { roles } from './data';
 
-export async function getCustomers({ page }: { page: string }) {
+export async function getCustomers({ page }: { page: string | null }) {
   cookies().get('email');
   await sleep(1000);
   const currentPage = page ? parseInt(page, 10) : 1;

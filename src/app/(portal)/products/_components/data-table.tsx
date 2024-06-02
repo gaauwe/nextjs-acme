@@ -48,7 +48,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
   const loadingTimeout = useRef<NodeJS.Timeout>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data } = useSuspenseQuery<TData<any>>({
+  const { data } = useSuspenseQuery<TData<Record<string, string | number>[]>>({
     queryKey: [path, deferedSearchParams.toString()],
     queryFn: async () => {
       const data = await fetch(`http://localhost:4000/api${path}?${searchParams.toString()}`, { cache: 'force-cache' }).then((res) =>
@@ -68,8 +68,6 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
       setIsLoading(false);
     }
   }, [searchParams, deferedSearchParams]);
-
-  console.log(data);
 
   return (
     <div className="space-y-4">
@@ -102,7 +100,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
                       );
                     }
 
-                    if (column.type === 'currency') {
+                    if (column.type === 'currency' && typeof value === 'number') {
                       return (
                         <TableCell key={i} width={column.width}>
                           {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(value)}
@@ -110,7 +108,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
                       );
                     }
 
-                    if (column.type === 'number') {
+                    if (column.type === 'number' && typeof value === 'number') {
                       return (
                         <TableCell key={i} width={column.width}>
                           {new Intl.NumberFormat('nl-NL').format(value)}
@@ -118,10 +116,11 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
                       );
                     }
 
-                    if (column.type === 'image') {
+                    if (column.type === 'image' && typeof value === 'string') {
                       return (
                         <TableCell key={i} width={column.width}>
-                          <img src={value} className="h-16 w-16 rounded-md shadow-md" />
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={value} alt="" className="h-16 w-16 rounded-md shadow-md" />
                         </TableCell>
                       );
                     }

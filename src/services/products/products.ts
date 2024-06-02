@@ -4,7 +4,7 @@ import { sleep } from '@/lib/utils';
 
 import { categories, statuses } from './data';
 
-export async function getProducts({ page }: { page: string }) {
+export async function getProducts({ page }: { page: string | null }) {
   await sleep(1000);
   const currentPage = page ? parseInt(page, 10) : 1;
 
