@@ -1,5 +1,7 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
@@ -58,7 +60,9 @@ export function DataTableToolbar({ filters, search, placeholder, searchParams, c
           </Button>
         )}
       </div>
-      <DataTableViewOptions columns={columns} />
+      <Suspense>
+        <DataTableViewOptions columns={columns} />
+      </Suspense>
     </div>
   );
 }
