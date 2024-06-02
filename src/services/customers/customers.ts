@@ -10,6 +10,7 @@ export async function getCustomers({
   pageSize,
   filters,
   sort,
+  search,
 }: {
   page: string | null;
   pageSize: string | null;
@@ -43,7 +44,9 @@ export async function getCustomers({
 
   const products = rawProducts
     .filter((product) => {
-      return rolesFilter.length === 0 || rolesFilter.includes(product.role);
+      if (rolesFilter.length > 0 && !rolesFilter.includes(product.role)) return false;
+      if (search && !product.name.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
     })
     .sort((a, b) => {
       if (sort) {

@@ -56,7 +56,7 @@ export function DataTableToolbar({ filters, search, placeholder, searchParams, c
         {isFiltered && (
           <Button variant="ghost" className="h-8 px-2 lg:px-3" onClick={clearFilters}>
             Reset
-            <Cross2Icon className="ml-2 h-4 w-4" />
+            <Cross2Icon className="h-4 w-4" />
           </Button>
         )}
       </div>

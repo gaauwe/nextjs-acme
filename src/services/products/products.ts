@@ -10,11 +10,13 @@ export async function getProducts({
   pageSize,
   filters,
   sort,
+  search,
 }: {
   page: string | null;
   pageSize: string | null;
   filters: { key: string; value: string }[];
   sort?: Record<string, 'asc' | 'desc'>;
+  search?: string | null;
 }) {
   cookies().get('email');
   await sleep(1000);
@@ -42,6 +44,7 @@ export async function getProducts({
     .filter((product) => {
       if (statusFilters.length > 0 && !statusFilters.includes(product.status)) return false;
       if (categoryFilters.length > 0 && !categoryFilters.includes(product.category)) return false;
+      if (search && !product.name.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     })
     .sort((a, b) => {

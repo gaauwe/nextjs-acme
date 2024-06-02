@@ -4,6 +4,7 @@ import { Suspense, useDeferredValue, useEffect, useRef, useState } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { LoaderCircle } from 'lucide-react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { Badge, BadgeProps } from '@/components/ui/badge';
@@ -140,8 +141,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
                     if (column.type === 'image' && typeof value === 'string') {
                       return (
                         <TableCell key={i} width={column.width} style={{ minWidth: column.width }}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={value} alt="" className="h-16 w-16 rounded-md shadow-md" />
+                          <Image src={value} alt="" width={64} height={64} className="h-16 w-16 rounded-md shadow-md" />
                         </TableCell>
                       );
                     }
