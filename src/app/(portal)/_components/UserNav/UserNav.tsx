@@ -33,7 +33,11 @@ export function UserNav({ user, ...props }: UserNav) {
     .join(' ');
 
   return (
-    <div className="flex gap-x-3 lg:px-4 lg:py-5">
+    <div className="flex gap-x-3 lg:px-4">
+      <div className="flex-col space-y-1 hidden lg:flex">
+        <p className="text-sm font-medium leading-none text-background text-right">{name}</p>
+        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -70,10 +74,6 @@ export function UserNav({ user, ...props }: UserNav) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="flex-col space-y-1 hidden lg:flex">
-        <p className="text-sm font-medium leading-none text-background">{name}</p>
-        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-      </div>
     </div>
   );
 }

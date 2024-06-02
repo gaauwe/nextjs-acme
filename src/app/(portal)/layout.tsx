@@ -1,5 +1,9 @@
+import { Package2 } from 'lucide-react';
+import Link from 'next/link';
+
+import { MainNav } from './_components/main-nav/main-nav';
 import MobileHeader from './_components/mobile-header/mobile-header';
-import { Sidebar } from './_components/Sidebar/Sidebar';
+import { UserNav } from './_components/UserNav/UserNav';
 
 export default function DashboardLayout({
   children,
@@ -9,12 +13,20 @@ export default function DashboardLayout({
   return (
     <>
       <MobileHeader />
-      <div className="flex flex-1">
-        <Sidebar className="hidden lg:flex lg:flex-col w-64" />
-        <div className="flex-1 m-2 lg:m-3 rounded-md lg:rounded overflow-hidden bg-background relative">
-          <div id="nprogress-parent" />
-          <main className="h-full flex flex-col max-h-[calc(100vh-24px)] overflow-auto px-4 py-6 lg:p-8 bg-white">{children}</main>
+      <div className="items-center px-4 hidden lg:flex lg:pt-5 lg:pb-2">
+        <Link href="/" className="flex items-center gap-2 font-semibold">
+          <Package2 className="h-6 w-6 text-primary" />
+          <span className="text-primary">Acme Inc</span>
+        </Link>
+        <MainNav className="mx-6" />
+        <div className="ml-auto flex items-center space-x-4">
+          {/* <Search /> */}
+          <UserNav user={{ email: 'john.doe@acme.com' }} />
         </div>
+      </div>
+
+      <div className="flex flex-1 m-2 lg:m-3 rounded-md lg:rounded overflow-hidden bg-background relative">
+        <main className="flex flex-col flex-1 overflow-auto px-4 py-6 lg:p-8 bg-muted">{children}</main>
       </div>
     </>
   );

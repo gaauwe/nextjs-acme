@@ -9,7 +9,7 @@ interface EmptyStatePlaceholderProps {
 
 export function EmptyStatePlaceholder({ title, subtitle, icon: Icon, children }: EmptyStatePlaceholderProps) {
   return (
-    <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
+    <div className="flex flex-1 shrink-0 items-center justify-center rounded-md bg-white border border-dashed">
       <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
         <Icon className="h-10 w-10 text-muted-foreground" />
         <h3 className="mt-4 text-lg font-semibold">{title}</h3>
