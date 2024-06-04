@@ -1,6 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 
-import DataTableWithSuspense from './_components/data-table';
+import DataTableWithSuspense from './_components/loader';
 
 export default async function Products() {
   return (
@@ -13,6 +13,7 @@ export default async function Products() {
       </div>
       <Separator className="my-4" />
       <DataTableWithSuspense
+        data={{}}
         path="/products"
         columns={[
           { header: '', viewHeader: 'Image', cell: 'image', type: 'image', width: '100px' },

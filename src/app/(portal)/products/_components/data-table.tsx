@@ -1,8 +1,7 @@
 'use client';
 
-import { Suspense, useDeferredValue, useEffect, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useRef, useState } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { LoaderCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -10,7 +9,6 @@ import { useSearchParams } from 'next/navigation';
 import { Badge, BadgeProps } from '@/components/ui/badge';
 import { SVGSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { getUrl } from '@/lib/utils';
 
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTablePagination } from './data-table-pagination';
@@ -34,6 +32,8 @@ export interface TData<T> {
 }
 
 export interface DataTableProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
   path: string;
   filterPlaceholder?: string;
   columns: {
@@ -46,7 +46,7 @@ export interface DataTableProps {
   }[];
 }
 
-export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) {
+export function DataTable({ columns, filterPlaceholder, data }: DataTableProps) {
   const searchParams = useSearchParams();
   const deferedSearchParams = useDeferredValue(searchParams);
   const loadingTimeout = useRef<NodeJS.Timeout>();
@@ -54,13 +54,13 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data } = useSuspenseQuery<TData<Record<string, string | number>[]>>({
-    queryKey: [path, deferedSearchParams.toString().replace(/&?columns=[^&]*/g, '')],
-    queryFn: async () => {
-      const data = await fetch(getUrl(`/api${path}?${searchParams.toString()}`), { cache: 'force-cache' }).then((res) => res.json());
-      return data;
-    },
-  });
+  // const { data } = useSuspenseQuery<TData<Record<string, string | number>[]>>({
+  //   queryKey: [path, deferedSearchParams.toString().replace(/&?columns=[^&]*/g, '')],
+  //   queryFn: async () => {
+  //     const data = await fetch(getUrl(`/api${path}?${searchParams.toString()}`), { cache: 'force-cache' }).then((res) => res.json());
+  //     return data;
+  //   },
+  // });
 
   useEffect(() => {
     if (searchParams.toString() !== deferedSearchParams.toString()) {
@@ -101,7 +101,8 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
           </TableHeader>
           <TableBody>
             {data.data.length ? (
-              data.data.map((row) => (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              data.data.map((row: any) => (
                 <TableRow key={row.id} data-state="nselected" className="cursor-pointer">
                   {columns.map((column, i) => {
                     if (activeColumns.length > 0 && !activeColumns.includes(column.viewHeader ?? column.header)) {
@@ -148,8 +149,10 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
 
                     if (column.type === 'badge') {
                       const option = data.meta.filters
-                        .find((filter) => filter.key === column.cell)
-                        ?.options.find((option) => option.value === value);
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        .find((filter: any) => filter.key === column.cell)
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        ?.options.find((option: any) => option.value === value);
                       const badgeVariant = option?.badgeColor as BadgeProps['variant'];
 
                       return (
@@ -189,7 +192,7 @@ export function DataTable({ path, columns, filterPlaceholder }: DataTableProps) 
   );
 }
 
-function DataTableSkeleton(props: DataTableProps) {
+export function DataTableSkeleton(props: DataTableProps) {
   return (
     <div className="space-y-4">
       <DataTableToolbar filters={[]} placeholder={props.filterPlaceholder} columns={props.columns} />
@@ -228,13 +231,5 @@ function DataTableSkeleton(props: DataTableProps) {
         </Table>
       </div>
     </div>
-  );
-}
-
-export default function DataTableWithSuspense(props: DataTableProps) {
-  return (
-    <Suspense key={props.path} fallback={<DataTableSkeleton {...props} />}>
-      <DataTable {...props} />
-    </Suspense>
   );
 }
