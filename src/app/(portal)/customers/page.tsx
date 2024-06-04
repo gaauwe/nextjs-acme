@@ -1,4 +1,4 @@
-import DataTableWithSuspense from '@/app/(portal)/products/_components/loader';
+import DataTableWithSuspense from '@/app/(portal)/products/_components/data-table';
 import { Separator } from '@/components/ui/separator';
 
 export default async function Products() {
@@ -12,7 +12,6 @@ export default async function Products() {
       </div>
       <Separator className="my-4" />
       <DataTableWithSuspense
-        data={{}}
         path="/customers"
         filterPlaceholder="Filter customers..."
         columns={[
